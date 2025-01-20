@@ -148,7 +148,7 @@ shared_theme <- theme(
 # Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
 
 
-filtered_fd <- fd %>% filter(Variable %in% c("Crime_score","Income_score", "Living_Environment_score", "Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car")) 
+filtered_fd <- fd %>% filter(Variable %in% c("Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","Living_Environment_score","contain_outbreak_management_percapita")) 
 
 dodge_width <- 0.3
 
@@ -191,7 +191,7 @@ plot1 <- ggplot(filtered_fd, aes(y = reorder(clean_var, Beta), x = Beta, color =
 # Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
 
 
-filtered_sd <- sd %>% filter(Variable %in% c("Income_score", "Living_Environment_score", "Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car")) 
+filtered_sd <- sd %>% filter(Variable %in% c("Living_Environment_score", "Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","unringfenced_percapita")) 
 
 dodge_width <- 0.3
 
@@ -236,7 +236,7 @@ plot2 <- ggplot(filtered_sd, aes(y = reorder(clean_var, Beta), x = Beta, color =
 # Crime Score, Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
 
 
-filtered_td <- td %>% filter(Variable %in% c("Crime_score","Income_score", "Living_Environment_score","Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car")) 
+filtered_td <- td %>% filter(Variable %in% c("Crime_score","Living_Environment_score","Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car")) 
 
 dodge_width <- 0.3
 
@@ -368,7 +368,7 @@ sdvtd <- subset(dropout, dropout$dose == "Second vs Third")
 # Second Dose Droupout
 # pop_per_km2, all other white, asian, pop_u25, unringfenced
 
-filtered_sd_dropout <- fdvsd %>% filter(Variable %in% c("Living_Environment_score","Pop_per_km2", "prop_all_other_white", "prop_asian","prop_u25","unringfenced_percapita" )) 
+filtered_sd_dropout <- fdvsd %>% filter(Variable %in% c("Pop_per_km2","prop_all_other_white", "prop_asian","prop_u25","Living_Environment_score","unringfenced_percapita" )) 
 
 dodge_width <- 0.3
 
@@ -412,7 +412,7 @@ plot4 <- ggplot(filtered_sd_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
 # Third Dose Droupout
 # pop_per_km2, all other white, asian, pop_u25, unringfenced
 
-filtered_td_dropout <- sdvtd %>% filter(Variable %in% c("Crime_score","Income_score","prop_asian", "prop_asian","prop_black_afr_car","prop_o65" )) 
+filtered_td_dropout <- sdvtd %>% filter(Variable %in% c("prop_all_other_white","prop_asian","prop_black_afr_car","prop_o65" )) 
 
 dodge_width <- 0.3
 

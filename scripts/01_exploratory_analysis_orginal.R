@@ -149,10 +149,3 @@ missing_values_by_week <- data %>%
 
 # Print the resulting table
 plot(missing_values_by_week)
-
-
-
-
-
-
-

@@ -30,7 +30,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Load in Data ------------------------------------------------------------
 
-england_clean_data <- read.csv("../data/england_clean_data.csv")
+england_clean_data <- read.csv("../data/england_data_clean.csv")
 
 
 # Max Uptake Per Dose Density ---------------------------------------------
@@ -405,5 +405,8 @@ summary_data_clean %>%
 
 write.csv(summary_data_clean, "../results_tables/sum_stats.csv")
 
+
+
+# IMD variables -----------------------------------------------------------
 
 

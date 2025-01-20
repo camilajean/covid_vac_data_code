@@ -22,6 +22,7 @@ suppressPackageStartupMessages(library(sharp))
 rm(list = ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
+set.seed(123)
 
 
 # Functions ---------------------------------------------------------------
@@ -177,7 +178,7 @@ vars <- c("Population",
 
 england_clean_data_exlc_na <- na.omit(england_clean_data) # stability selection only works on compelete cases. droped 6 rows with NA
 
-dropped_rows <- england_clean_data[!complete.cases(england_clean_data), ]
+dropped_rows <- england_clean_data[!complete.cases(england_clean_data), ] # 3 LTLA's dropped as missing 
 
 na_counts <- colSums(is.na(england_clean_data))
 
@@ -220,8 +221,8 @@ selprop_fd <- data.frame(SelectionProportions(out_fd))
 selprop_fd$variables <- rownames(selprop_fd)
 
 hat_params_fd <- Argmax(out_fd)
-print(paste0("lambda: ", hat_params_fd[1])) # lambda: 3.05387945908467"
-print(paste0("pi: ", hat_params_fd[2])) # "pi: 0.82"
+print(paste0("lambda: ", hat_params_fd[1])) # lambda: 2.9642511375462"
+print(paste0("pi: ", hat_params_fd[2])) # "pi: 0.81"
 
 
 select_vars_fd <- selprop_fd[selprop_fd$SelectionProportions.out_fd. >= hat_params_fd[2],]
@@ -260,8 +261,8 @@ selprop_sd <- data.frame(SelectionProportions(out_sd))
 selprop_sd$variables <- rownames(selprop_sd)
 
 hat_params_sd <- Argmax(out_sd)
-print(paste0("lambda: ", hat_params_sd[1])) # lambda: 0.705342346438161"
-print(paste0("pi: ", hat_params_sd[2])) # pi: 0.5
+print(paste0("lambda: ", hat_params_sd[1])) # lambda: 0.704633311983016"
+print(paste0("pi: ", hat_params_sd[2])) # pi: 0.54
 
 
 select_vars_sd <- selprop_fd[selprop_sd$SelectionProportions.out_sd. >= hat_params_sd[2],]
@@ -302,8 +303,8 @@ selprop_td <- data.frame(SelectionProportions(out_td))
 selprop_td$variables <- rownames(selprop_td)
 
 hat_params_td <- Argmax(out_td)
-print(paste0("lambda: ", hat_params_td[1])) # lambda:  1.4521666457333"
-print(paste0("pi: ", hat_params_td[2])) # pi: 0.76
+print(paste0("lambda: ", hat_params_td[1])) # lambda:  0.498385941698144"
+print(paste0("pi: ", hat_params_td[2])) # pi: 0.6
 
 
 select_vars_td <- selprop_td[selprop_td$SelectionProportions.out_td. >= hat_params_td[2],]
@@ -342,8 +343,8 @@ selprop_1v2 <- data.frame(SelectionProportions(out_1v2))
 selprop_1v2$variables <- rownames(selprop_1v2)
 
 hat_params_1v2 <- Argmax(out_1v2)
-print(paste0("lambda: ", hat_params_1v2[1])) # lambda: 0.422252735266526
-print(paste0("pi: ", hat_params_1v2[2])) # pi: 0.63
+print(paste0("lambda: ", hat_params_1v2[1])) # lambda: 0.11636521946672
+print(paste0("pi: ", hat_params_1v2[2])) # pi: 0.56
 
 
 select_vars_1v2 <- selprop_1v2[selprop_1v2$SelectionProportions.out_1v2. >= hat_params_1v2[2],]
@@ -380,8 +381,8 @@ selprop_2v3 <- data.frame(SelectionProportions(out_2v3))
 selprop_2v3$variables <- rownames(selprop_2v3)
 
 hat_params_2v3 <- Argmax(out_2v3)
-print(paste0("lambda: ", hat_params_2v3[1])) # lambda: 1.15428138003463
-print(paste0("pi: ", hat_params_2v3[2])) # pi: 0.79
+print(paste0("lambda: ", hat_params_2v3[1])) # lambda: 0.679871071255746
+print(paste0("pi: ", hat_params_2v3[2])) # pi: 0.82
 
 
 select_vars_2v3 <- selprop_2v3[selprop_2v3$SelectionProportions.out_2v3. >= hat_params_sd[2],]
@@ -565,7 +566,6 @@ subset(lasso_random_dropout,lasso_random_dropout$Variable == "prop_o65")
 # ** Combine Fixed and Random
 lasso_models <- rbind(lasso_fixed_dropout,lasso_random_dropout)
 write.csv(lasso_models, "../results_tables/stability_between_doses_final.csv")
-
 
 
 

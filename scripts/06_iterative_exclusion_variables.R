@@ -3,8 +3,7 @@
 
 # General Libraries -------------------------------------------------------
 
-library(lme4)
-library(nlme)
+library(lmerTest)
 library(tidyverse)
 library(ggplot2)
 library(readxl)
@@ -20,7 +19,7 @@ library(patchwork)
 rm(list = ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-
+set.seed(123)
 
 # Functions ---------------------------------------------------------------
 
@@ -284,8 +283,8 @@ vars <- c("Population",
           "residential_percent_change_from_baseline",                 
           "Other_proportion",                                         
           "NHS_registered_population",                                
-          "Core_services_funding",                                    
-          "Primary_care_funding",                                     
+          "Core_services_funding_percapita",                                    
+          "Primary_care_funding_percapita",                                     
           "Specialised_services",                                     
           "unringfenced_percapita",                                             
           "contain_outbreak_management_percapita",                              
@@ -315,6 +314,7 @@ vars <- c("Population",
           "Crime_score",                                              
           "Barriers_to_Housing_and_Services_score",                   
           "Living_Environment_score")
+
 
 
 # Script: Fixed Stepwise Exclusion ----------------------------------------
@@ -636,8 +636,10 @@ iter_vars_fixed_2v3 <- res_fixed_2v3 %>%
   distinct()
 iter_vars_fixed_2v3 <- unlist(unique(iter_vars_fixed_2v3$term))
 
+# Unique list of vars 
+doses_fixed_vars <- unique(c(fd_iter_vars_fixed, sd_iter_vars_fixed, td_iter_vars_fixed))
 
-
+dropout_fixed_vars <- unique(c(iter_vars_fixed_1v2, iter_vars_fixed_2v3))
 
 
 # ** Random
@@ -677,12 +679,16 @@ iter_vars_rand_2v3 <- res_rand_2v3 %>%
   distinct()
 iter_vars_rand_2v3 <- unlist(unique(iter_vars_rand_2v3$term))
 
+# Unique list of vars 
 
+doses_rand_vars <- unique(c(fd_iter_vars_rand,sd_iter_vars_rand,td_iter_vars_rand))
+
+dropout_rand_vars <- unique(c(iter_vars_rand_1v2,iter_vars_rand_2v3))
 
 # Script: Extract Results and Combine -------------------------------------
 
 # Fixed
-fd_step_fixed <- multivar_model("cumVaccPercentage_FirstDose", fd_iter_vars_fixed, england_clean_data)
+fd_step_fixed <- multivar_model("cumVaccPercentage_FirstDose", doses_fixed_vars, england_clean_data)
 
 fd_step_fixed<- fd_step_fixed$Results
 fd_step_fixed <- fd_step_fixed %>%
@@ -690,7 +696,7 @@ fd_step_fixed <- fd_step_fixed %>%
     dose = "First"
   )
 
-sd_step_fixed <- multivar_model("cumVaccPercentage_SecondDose", sd_iter_vars_fixed, england_clean_data)
+sd_step_fixed <- multivar_model("cumVaccPercentage_SecondDose", doses_fixed_vars, england_clean_data)
 
 sd_step_fixed <- sd_step_fixed$Results
 sd_step_fixed <- sd_step_fixed %>%
@@ -698,7 +704,7 @@ sd_step_fixed <- sd_step_fixed %>%
     dose = "Second"
   )
 
-td_step_fixed <- multivar_model("cumVaccPercentage_ThirdDose", td_iter_vars_fixed, england_clean_data)
+td_step_fixed <- multivar_model("cumVaccPercentage_ThirdDose", doses_fixed_vars, england_clean_data)
 
 td_step_fixed <- td_step_fixed$Results
 td_step_fixed <- td_step_fixed %>%
@@ -715,14 +721,14 @@ stepwise_fixed <- stepwise_fixed %>%
     effects = "Fixed"
   )
 
-step_fixed_1v2 <- multivar_model("d1_v_d2", iter_vars_fixed_1v2, england_clean_data)
+step_fixed_1v2 <- multivar_model("d1_v_d2", dropout_fixed_vars, england_clean_data)
 
 step_fixed_1v2 <- step_fixed_1v2$Results %>%
   mutate(
     dose = "First vs Second"
   )
 
-step_fixed_2v3 <- multivar_model("d2_v_d3", iter_vars_fixed_2v3, england_clean_data)
+step_fixed_2v3 <- multivar_model("d2_v_d3", dropout_fixed_vars, england_clean_data)
 
 step_fixed_2v3 <- step_fixed_2v3$Results %>%
   mutate(
@@ -746,7 +752,7 @@ subset(stepwise_fixed_dropout, stepwise_fixed_dropout$Variable == "Pop_per_km2")
 
 # Random
 
-fd_step_rand <- lmm_model("cumVaccPercentage_FirstDose", fd_iter_vars_rand,"RGN21CD", england_clean_data )
+fd_step_rand <- lmm_model("cumVaccPercentage_FirstDose", doses_rand_vars,"RGN21CD", england_clean_data )
 
 fd_step_rand <- fd_step_rand$Results
 fd_step_rand <- fd_step_rand %>%
@@ -754,7 +760,7 @@ fd_step_rand <- fd_step_rand %>%
     dose = "First"
   )
 
-sd_step_rand <- lmm_model("cumVaccPercentage_SecondDose", sd_iter_vars_rand,"RGN21CD", england_clean_data )
+sd_step_rand <- lmm_model("cumVaccPercentage_SecondDose", doses_rand_vars,"RGN21CD", england_clean_data )
 
 sd_step_rand <- sd_step_rand$Results
 sd_step_rand <- sd_step_rand %>%
@@ -762,7 +768,7 @@ sd_step_rand <- sd_step_rand %>%
     dose = "Second"
   )
 
-td_step_rand <- lmm_model("cumVaccPercentage_ThirdDose", td_iter_vars_rand,"RGN21CD", england_clean_data )
+td_step_rand <- lmm_model("cumVaccPercentage_ThirdDose", doses_rand_vars,"RGN21CD", england_clean_data )
 
 td_step_rand <- td_step_rand$Results
 td_step_rand <- td_step_rand %>%
@@ -778,13 +784,13 @@ stepwise_random <- stepwise_random %>%
   )
 
 
-step_rand_1v2 <- lmm_model("d1_v_d2", iter_vars_rand_1v2,"RGN21CD", england_clean_data )
+step_rand_1v2 <- lmm_model("d1_v_d2", dropout_rand_vars,"RGN21CD", england_clean_data )
 step_rand_1v2 <- step_rand_1v2$Results %>%
   mutate (
     dose = "First vs Second"
   )
 
-step_rand_2v3 <- lmm_model("d2_v_d3", iter_vars_rand_2v3,"RGN21CD", england_clean_data )
+step_rand_2v3 <- lmm_model("d2_v_d3", dropout_rand_vars,"RGN21CD", england_clean_data )
 step_rand_2v3 <- step_rand_2v3$Results %>%
   mutate (
     dose = "Second vs Third"
@@ -806,5 +812,4 @@ write.csv(stepwise_models, "../results_tables/stepwise_model_results_final.csv")
 
 stepwise_models_dropout <- rbind(stepwise_fixed_dropout,stepwise_random_dropout)
 write.csv(stepwise_models_dropout, "../results_tables/stepwise_between_doses_final.csv")
-
 

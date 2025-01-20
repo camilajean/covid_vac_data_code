@@ -312,6 +312,7 @@ simple_random <- simple_random %>%
 head(simple_random)
 subset(simple_random,simple_random$Variable == "prop_u25")
 subset(simple_fixed,simple_fixed$Variable == "prop_u25")
+subset(simple_fixed,simple_fixed$Variable == "Income_score")
 
 
 # Save Dropout CSV --------------------------------------------------------
