@@ -4,7 +4,9 @@ This project investigates the determinants of vaccine uptake and dropout rates a
 # Directory structure
 * Data: Contains raw and processed datasets used througout the project
 * Figures: Contains visual outputs of the analysis in pdf, png and tiff formats
-* Results tables: summary tables and modelling results. 
+* Results tables: summary tables and modelling results.
+    * all_results_tables: Summary of main findings for doses and dropout
+    * all_bic_results: Summary table comparing all model BIC results
 * Scripts: R scripts used for data preparation, analysis and visualisation 
 
 # Dependencies 
