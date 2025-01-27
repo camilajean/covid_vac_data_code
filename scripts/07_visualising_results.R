@@ -82,7 +82,7 @@ doses <- doses %>%
       Variable == "Median_age" ~"Median Age",
       Variable == "mean_popden" ~ "Mean Population Density",
       Variable == "Population" ~ "Population",
-      Variable == "no_jobs" ~ "Number of Jobs",
+      Variable == "no_jobs" ~ "Estimated Job Counts",
       Variable == "ASC_workforce_capacity" ~ "ASC Workforce Capacity",
       Variable == "ASC_rapid_testing" ~ "ASC Rapid Testing",
       Variable == "CEV_fund_percapita" ~ "CEV Fund Per Capita",
@@ -145,10 +145,11 @@ shared_theme <- theme(
 )
 
 #First Dose
-# Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
+# Prop all other white, Prop Asian, Prop B/A/C, Living Environment, Median age
 
 
-filtered_fd <- fd %>% filter(Variable %in% c("Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","Living_Environment_score","contain_outbreak_management_percapita")) 
+
+filtered_fd <- fd %>% filter(Variable %in% c("Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","Living_Environment_score")) 
 
 dodge_width <- 0.3
 
@@ -188,7 +189,8 @@ plot1 <- ggplot(filtered_fd, aes(y = reorder(clean_var, Beta), x = Beta, color =
 
 
 #Second Dose
-# Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
+# Prop all other white, Prop Asian, Prop B/A/C, unringfenced, Living environment, Median age
+
 
 
 filtered_sd <- sd %>% filter(Variable %in% c("Living_Environment_score", "Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","unringfenced_percapita")) 
@@ -233,7 +235,8 @@ plot2 <- ggplot(filtered_sd, aes(y = reorder(clean_var, Beta), x = Beta, color =
 
 
 #Third Dose
-# Crime Score, Income score, Living Environment Score, Median Age, All other white, Asian, B/A/C
+# Prop all other white, Prop Asian, Prop B/A/C, Crime score, Living environment, Median age
+
 
 
 filtered_td <- td %>% filter(Variable %in% c("Crime_score","Living_Environment_score","Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car")) 
@@ -332,7 +335,7 @@ dropout <- dropout %>%
       Variable == "Median_age" ~"Median Age",
       Variable == "mean_popden" ~ "Mean Population Density",
       Variable == "Population" ~ "Population",
-      Variable == "no_jobs" ~ "Number of Jobs",
+      Variable == "no_jobs" ~ "Estimated Job Counts",
       Variable == "ASC_workforce_capacity" ~ "ASC Workforce Capacity",
       Variable == "ASC_rapid_testing" ~ "ASC Rapid Testing",
       Variable == "CEV_fund_percapita" ~ "CEV Fund Per Capita",
@@ -366,7 +369,8 @@ sdvtd <- subset(dropout, dropout$dose == "Second vs Third")
 
 
 # Second Dose Droupout
-# pop_per_km2, all other white, asian, pop_u25, unringfenced
+# Pop per km2, Prop all other white, Prop Asian, Prop u25, Unringfenced, Living environment
+
 
 filtered_sd_dropout <- fdvsd %>% filter(Variable %in% c("Pop_per_km2","prop_all_other_white", "prop_asian","prop_u25","Living_Environment_score","unringfenced_percapita" )) 
 
@@ -410,7 +414,8 @@ plot4 <- ggplot(filtered_sd_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
 
 
 # Third Dose Droupout
-# pop_per_km2, all other white, asian, pop_u25, unringfenced
+# Prop all other white, Prop Asian, Prop B/A/C, Prop o65
+
 
 filtered_td_dropout <- sdvtd %>% filter(Variable %in% c("prop_all_other_white","prop_asian","prop_black_afr_car","prop_o65" )) 
 
