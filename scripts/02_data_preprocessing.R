@@ -1,6 +1,11 @@
 
 # **Data Standardisation and U25 Extraction Refactored Code**
 
+# Clear environment and set working directory -----------------------------
+
+rm(list = ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 
 # General Libraries -------------------------------------------------------
 
@@ -23,10 +28,9 @@ library(cowplot)
 library(viridis)
 library(ggpubr)
 
-# Clear environment and set working directory -----------------------------
 
-rm(list = ls())
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# packages <- c("dplyr", "tidyr","tidyverse","readxl","lme4","nlme","ggplot2","broom.mixed","table1","gt","patchwork","sf","spdep","gridExtra","cowplot","viridis","ggpubr")
+# lapply(packages,install.packages)
 
 
 # Reusable Functions ------------------------------------------------------

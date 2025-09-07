@@ -1,5 +1,10 @@
 # **Exploratory Analysis and Filtering Code**
 
+# Clear environment and set working directory -----------------------------
+
+rm(list = ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 
 # General Libraries -------------------------------------------------------
 
@@ -11,10 +16,6 @@ library(reshape2)
 library(RColorBrewer)
 
 
-# Clear environment and set working directory -----------------------------
-
-rm(list = ls())
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Data --------------------------------------------------------------------
 data <- read.csv("../data/Cases_Data.csv")
@@ -149,3 +150,6 @@ missing_values_by_week <- data %>%
 
 # Print the resulting table
 plot(missing_values_by_week)
+
+
+
