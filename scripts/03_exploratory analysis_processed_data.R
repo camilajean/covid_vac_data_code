@@ -400,7 +400,7 @@ summary_data_clean %>%
   ) %>%
   fmt_number(
     columns = c(Min, `Lower Quartile`,Mean, Median, `Upper Quartile`, Max),
-    decimals = 2
+    decimals = 3 
   )
 
 write.csv(summary_data_clean, "../results_tables/sum_stats.csv")
