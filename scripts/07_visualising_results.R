@@ -133,7 +133,7 @@ shared_theme <- theme(
     family = "Arial"
   ),
   axis.text.x = element_text(
-    size = 12, 
+    size = 20, 
     face = "plain", 
     family = "Arial", 
     margin = margin(5, 0, 0, 0)
@@ -249,7 +249,7 @@ plot3 <- ggplot(filtered_td, aes(y = reorder(clean_var, Beta), x = Beta, color =
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-7, 7), breaks = seq(-7, 7, 1)) +
+  scale_x_continuous(limits = c(-7, 7), breaks = seq(-7, 7, 2)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -259,7 +259,7 @@ plot3 <- ggplot(filtered_td, aes(y = reorder(clean_var, Beta), x = Beta, color =
     panel.grid.minor = element_blank(), 
     axis.line = element_line(colour = "black"),
     axis.text.y = element_text(size = 15, colour = "black"),
-    axis.text.x.bottom = element_text(size = 15, colour = "black"),
+    axis.text.x.bottom = element_text(size = 18, colour = "black"),
     axis.title.x = element_text(size = 15, colour = "black"),
     strip.background = element_blank(),
     strip.text = element_blank(),
@@ -427,7 +427,7 @@ plot5 <- ggplot(filtered_td_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-5, 10), breaks = seq(-5, 10, 1)) +
+  scale_x_continuous(limits = c(-5, 10), breaks = seq(-5, 10, 2)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -437,7 +437,7 @@ plot5 <- ggplot(filtered_td_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
     panel.grid.minor = element_blank(), 
     axis.line = element_line(colour = "black"),
     axis.text.y = element_text(size = 15, colour = "black"),
-    axis.text.x.bottom = element_text(size = 15, colour = "black"),
+    axis.text.x.bottom = element_text(size = 18, colour = "black"),
     axis.title.x = element_text(size = 15, colour = "black"),
     strip.background = element_blank(),
     strip.text = element_blank(),
