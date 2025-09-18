@@ -12,6 +12,9 @@ library(table1)
 library(dplyr)
 library(gt)
 library(patchwork)
+library(car)
+library(performance)
+
 
 
 # Clear environment and set working directory -----------------------------
@@ -812,4 +815,54 @@ write.csv(stepwise_models, "../results_tables/stepwise_model_results_final.csv")
 
 stepwise_models_dropout <- rbind(stepwise_fixed_dropout,stepwise_random_dropout)
 write.csv(stepwise_models_dropout, "../results_tables/stepwise_between_doses_final.csv")
+
+
+# VIF -------------------------------------------------------------
+
+# First dose
+fd_formula <- as.formula(paste("cumVaccPercentage_FirstDose ~", paste(fd_iter_vars_fixed, collapse = " + ")))
+fd_fixed <- lm(fd_formula,england_clean_data)
+check_collinearity(fd_fixed)
+
+# Second dose
+sd_formula <- as.formula(paste("cumVaccPercentage_SecondDose ~", paste(sd_iter_vars_fixed, collapse = " + ")))
+sd_fixed <- lm(sd_formula,england_clean_data)
+check_collinearity(sd_fixed)
+
+#Third Dose
+td_formula <- as.formula(paste("cumVaccPercentage_ThirdDose ~", paste(td_iter_vars_fixed, collapse = " + ")))
+td_fixed <- lm(td_formula,england_clean_data)
+check_collinearity(td_fixed)
+
+# Dropout First to Second
+d1vd2_formula <- as.formula(paste("d1_v_d2 ~", paste(iter_vars_fixed_1v2, collapse = " + ")))
+d1vd2_fixed <- lm(d1vd2_formula,england_clean_data)
+check_collinearity(d1vd2_fixed)
+
+# Dropout Second to Third
+d2vd3_formula <- as.formula(paste("d2_v_d3 ~", paste(iter_vars_fixed_2v3, collapse = " + ")))
+d2vd3_fixed <- lm(d2vd3_formula,england_clean_data)
+check_collinearity(d2vd3_fixed)
+
+
+cc_fd   <- check_collinearity(fd_fixed)   %>% as.data.frame() %>% mutate(Dose = "First")
+cc_sd   <- check_collinearity(sd_fixed)   %>% as.data.frame() %>% mutate(Dose = "Second")
+cc_td   <- check_collinearity(td_fixed)   %>% as.data.frame() %>% mutate(Dose = "Third")
+cc_d1d2 <- check_collinearity(d1vd2_fixed) %>% as.data.frame() %>% mutate(Dose = "First vs Second")
+cc_d2d3 <- check_collinearity(d2vd3_fixed) %>% as.data.frame() %>% mutate(Dose = "Second vs Third")
+
+# Combine all into one table
+cc_all <- bind_rows(cc_fd, cc_sd, cc_td, cc_d1d2, cc_d2d3)
+
+# Inspect
+head(cc_all)
+
+# Write to CSV
+write.csv(cc_all, "../results_tables/VIF_stepwise_results.csv")
+
+
+
+
+
+
 
