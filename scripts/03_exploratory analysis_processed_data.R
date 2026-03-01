@@ -407,6 +407,5 @@ write.csv(summary_data_clean, "../results_tables/sum_stats.csv")
 
 
 
-# IMD variables -----------------------------------------------------------
 
 

@@ -164,17 +164,56 @@ region_IMD <- filter(region_IMD,str_starts(areaCode, "E"))
 
 
 
+# Population density ------------------------------------------------------
+# mean_popden and pop_per_km2 similar measures but taken from different sources
+# Excluding mean_popden to account for the similar variables
+
+data <- region_IMD %>%
+  select(-(mean_popden))
+
+
 # Script: Managing Time Varying Covariates --------------------------------
 
 # ** Baseline variables
 # Step 1: Identify columns that end with '_baseline'
-baseline_columns <- grep("_baseline$", names(region_IMD), value = TRUE)
+baseline_columns <- grep("_baseline$", names(data), value = TRUE)
+
+
 
 # Step 2: Calculate the mean for each unique LTLA up to week 129
-region_IMD_av <- region_IMD %>%
+region_IMD_av <- data %>%
   group_by(areaCode) %>%
-  mutate(across(all_of(baseline_columns), ~ if_else(Week <= 129, mean(.x[Week <= 129], na.rm = TRUE), .x)))
+  mutate(across(all_of(baseline_columns), 
+                ~ if_else(Week <= 129, mean(.x[Week <= 129], na.rm = TRUE), .x))) %>%
+  ungroup()
 
+
+
+na_audit <- data %>%
+  select(areaCode, areaName, Week, all_of(baseline_columns)) %>%
+  pivot_longer(cols = all_of(baseline_columns),
+               names_to = "variable", values_to = "value") %>%
+  group_by(areaCode,areaName, variable) %>%
+  summarise(
+    n_weeks       = n_distinct(Week),
+    n_na          = sum(is.na(value)),
+    all_na        = all(is.na(value)),
+    missing_weeks = list(sort(unique(Week[is.na(value)]))),
+    .groups = "drop"
+  ) %>%
+  # keep only those with some NA
+  filter(n_na > 0)
+
+
+all_na_areas <- na_audit %>%
+  filter(all_na) %>%
+  select(areaCode, areaName, variable)
+
+print(all_na_areas)
+
+# can see that some variables are NA across all time points
+# There are 3 LTLAs missing across all time points
+# Hartlepool, Rutland, Castle Point
 
 
 
@@ -281,6 +320,10 @@ rgn_wk129 <- rgn_wk129 %>%
 summary(rgn_wk129$unringfenced_percapita)
 
 
+# Add dropoout ------------------------------------------------------------
+
+rgn_wk129$d1_v_d2 = ((rgn_wk129$cumVaccPercentage_FirstDose - rgn_wk129$cumVaccPercentage_SecondDose) / rgn_wk129$cumVaccPercentage_FirstDose ) * 100
+rgn_wk129$d2_v_d3 = ((rgn_wk129$cumVaccPercentage_SecondDose - rgn_wk129$cumVaccPercentage_ThirdDose) / rgn_wk129$cumVaccPercentage_SecondDose) * 100
 
 
 # Save as CSV (No standardising) ------------------------------------------
@@ -305,7 +348,6 @@ vars <- c("Population",
           "resident_earnings",                                        
           "mean_age",                                                 
           "prop_o65",
-          "mean_popden",                                              
           "Median_annual_income",                                     
           "no_jobs",                                                  
           "retail_and_recreation_percent_change_from_baseline",       
@@ -395,16 +437,6 @@ sd(england_clean_data$prop_u25)
 # Hartlepool Population (93836 - 190766.5) / 129501.6 = -0.7298205  -0.74848830
 # Hartlepool prop_u25 (0.3023147 - 0.2999043 ) / 0.03627863 = 0.06644132
 # Exact match to 6dp
-
-
-
-
-# Add dropoout ------------------------------------------------------------
-
-standardised_data$d1_v_d2 = ((standardised_data$cumVaccPercentage_FirstDose - standardised_data$cumVaccPercentage_SecondDose) / standardised_data$cumVaccPercentage_FirstDose ) * 100
-standardised_data$d2_v_d3 = ((standardised_data$cumVaccPercentage_SecondDose - standardised_data$cumVaccPercentage_ThirdDose) / standardised_data$cumVaccPercentage_SecondDose) * 100
-
-
 
 #save as csv
 write.csv(standardised_data, "../data/england_clean_std.csv")

@@ -149,7 +149,7 @@ shared_theme <- theme(
 
 
 
-filtered_fd <- fd %>% filter(Variable %in% c("Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","Living_Environment_score")) 
+filtered_fd <- fd %>% filter(Variable %in% c("Median_age", "prop_all_other_white", "prop_asian", "prop_black_afr_car","Living_Environment_score","unringfenced_percapita")) 
 
 dodge_width <- 0.3
 
@@ -159,7 +159,7 @@ plot1 <- ggplot(filtered_fd, aes(y = reorder(clean_var, Beta), x = Beta, color =
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-7, 7), breaks = seq(-7, 7, 1)) +
+  scale_x_continuous(limits = c(-5, 5), breaks = seq(-5, 5, 1)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -203,7 +203,7 @@ plot2 <- ggplot(filtered_sd, aes(y = reorder(clean_var, Beta), x = Beta, color =
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-7, 7), breaks = seq(-7, 7, 1)) +
+  scale_x_continuous(limits = c(-5, 5), breaks = seq(-5, 5, 1)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -249,7 +249,7 @@ plot3 <- ggplot(filtered_td, aes(y = reorder(clean_var, Beta), x = Beta, color =
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-7, 7), breaks = seq(-7, 7, 2)) +
+  scale_x_continuous(limits = c(-5, 5), breaks = seq(-5, 5, 2)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -372,7 +372,7 @@ sdvtd <- subset(dropout, dropout$dose == "Second vs Third")
 # Pop per km2, Prop all other white, Prop Asian, Prop u25, Unringfenced, Living environment
 
 
-filtered_sd_dropout <- fdvsd %>% filter(Variable %in% c("Pop_per_km2","prop_all_other_white", "prop_asian","prop_u25","Living_Environment_score","unringfenced_percapita" )) 
+filtered_sd_dropout <- fdvsd %>% filter(Variable %in% c("Pop_per_km2", "prop_asian","Median_age","unringfenced_percapita" ))
 
 dodge_width <- 0.3
 
@@ -382,7 +382,7 @@ plot4 <- ggplot(filtered_sd_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-5, 10), breaks = seq(-5, 10, 1)) +
+  scale_x_continuous(limits = c(-4, 2), breaks = seq(-4, 2, 1)) +
   theme_bw() +
   shared_theme + 
   theme(
@@ -417,7 +417,7 @@ plot4 <- ggplot(filtered_sd_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
 # Prop all other white, Prop Asian, Prop B/A/C, Prop o65
 
 
-filtered_td_dropout <- sdvtd %>% filter(Variable %in% c("prop_all_other_white","prop_asian","prop_black_afr_car","prop_o65" )) 
+filtered_td_dropout <- sdvtd %>% filter(Variable %in% c("prop_asian","prop_black_afr_car","prop_o65" )) 
 
 dodge_width <- 0.3
 
@@ -427,7 +427,7 @@ plot5 <- ggplot(filtered_td_dropout, aes(y = reorder(clean_var, Beta), x = Beta,
   xlab("Coefficient (95% CI)") + 
   ylab(" ") + 
   scale_color_manual(values = c("Fixed Effects Only" = "dodgerblue2", "With Random Effects" = "darkorange2")) + 
-  scale_x_continuous(limits = c(-5, 10), breaks = seq(-5, 10, 2)) +
+  scale_x_continuous(limits = c(-4, 3), breaks = seq(-4, 2, 2)) +
   theme_bw() +
   shared_theme + 
   theme(
